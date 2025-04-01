@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ContatoRepository extends JpaRepository<Contato, Long> {
     Contato findByNome(String nome);
     Contato findByTelefone(String telefone);
+    boolean existsByNome(String nome);
+    void deleteByNome(String nome);
 }
 
