@@ -1,9 +1,13 @@
 package com.bertan.agenda_telefonica.model;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Table(name = "agenda-telefonica")
+@Table(name = "agenda_telefonica")
+@Getter
+@Setter
 public class Contato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

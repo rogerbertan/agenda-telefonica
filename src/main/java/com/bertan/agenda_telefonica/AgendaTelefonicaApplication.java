@@ -1,17 +1,21 @@
 package com.bertan.agenda_telefonica;
 
+import com.bertan.agenda_telefonica.model.Contato;
+import com.bertan.agenda_telefonica.service.ContatoService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
 import java.util.Scanner;
 
 @SpringBootApplication
 public class AgendaTelefonicaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AgendaTelefonicaApplication.class, args);
+		var context = SpringApplication.run(AgendaTelefonicaApplication.class, args);
+		ContatoService contatoService = context.getBean(ContatoService.class);
+
 		Scanner scanner = new Scanner(System.in);
-		Agenda agenda = new Agenda();
 
 		int opcao;
 		do {
@@ -35,23 +39,31 @@ public class AgendaTelefonicaApplication {
 					String nome = scanner.nextLine().trim();
 					System.out.print("Digite o número do contato: ");
 					String telefone = scanner.nextLine().trim();
-					agenda.adicionarContato(new Contato(nome, telefone));
-					System.out.println("Contato adicionado com sucesso!");
+
+					boolean contatoExiste = contatoService.listarContatos().stream()
+							.anyMatch(c -> c.getNome().equalsIgnoreCase(nome) || c.getTelefone().equals(telefone));
+
+					if (contatoExiste){
+						System.out.println("Erro: Já existe um contato com esse nome ou telefone.");
+					}else {
+						contatoService.adicionarContato(new Contato(nome, telefone));
+						System.out.println("Contato adicionado com sucesso!");
+					}
 					break;
 				case 2:
 					System.out.println("\nLista de contatos:");
-					if (agenda.listarContatos().isEmpty()) {
+					List<Contato> contatos = contatoService.listarContatos();
+
+					if (contatos.isEmpty()) {
 						System.out.println("Nenhum contato cadastrado.");
 					} else {
-						for (Contato c : agenda.listarContatos()) {
-							System.out.println("Nome: " + c.getNome() + ", Telefone: " + c.getTelefone());
-						}
+						contatos.forEach(c -> System.out.println("Nome: " + c.getNome() + " | Telefone: " + c.getTelefone()));
 					}
 					break;
 				case 3:
 					System.out.print("Digite o nome do contato a ser removido: ");
 					String nomeRemover = scanner.nextLine().trim();
-					if (agenda.removerContato(nomeRemover)) {
+					if (contatoService.removerContato(nomeRemover)) {
 						System.out.println("Contato removido com sucesso!");
 					} else {
 						System.out.println("Contato não encontrado.");
