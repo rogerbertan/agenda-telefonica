@@ -64,3 +64,6 @@ A API estará disponível em `http://localhost:8080`.
 
 ### Listar Todos os Contatos
 **GET** `/contatos`
+
+### Deletar um Contato pelo Nome
+**DELETE** `/contatos/{nome}`
