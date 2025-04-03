@@ -1,69 +1,119 @@
-# Agenda Telefônica - API REST
+# Agenda Telefônica
 
-Esta é uma API REST para gerenciar contatos de uma agenda telefônica, utilizando **Java Spring Boot** e **PostgreSQL**.
+Este repositório contém o frontend desenvolvido em React e o backend em Java Spring Boot integrados via Docker.
 
 ## Tecnologias Utilizadas
-- Java 21
-- Spring Boot
-- Spring Data JPA
-- PostgreSQL
-- Maven
 
-## Como Configurar e Executar
+- **Frontend**: React, Vite, TailwindCSS
+- **Backend**: Java, Spring Boot, PostgreSQL
+- **Infraestrutura**: Docker, Docker Compose
 
-### 1️⃣ Clonar o Repositório
+## Configuração e Execução (Sem Docker)
+
+### 1. Clonar o Repositório
+
 ```sh
-git clone https://github.com/seu-usuario/agenda-telefonica-API.git
-cd agenda-telefonica-API
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
 ```
 
-### 2️⃣ Configurar o Banco de Dados PostgreSQL
-1. Acesse o PostgreSQL e crie o banco de dados:
-```sql
-CREATE DATABASE agenda_telefonica;
-```
-2. Conecte-se ao banco recém-criado e crie a tabela necessária:
-```sql
-CREATE TABLE contatos (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    telefone VARCHAR(20) NOT NULL,
-);
-```
+### 2. Instalar Dependências
 
-### 3️⃣ Configurar o Arquivo `application.properties`
-Edite o arquivo `src/main/resources/application.properties` para definir as credenciais do PostgreSQL:
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/agenda_telefonica
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=update
-```
+#### Frontend
 
-### 4️⃣ Compilar e Executar a API
 ```sh
-mvn clean install
-mvn spring-boot:run
+cd agenda-telefonica-front
+npm install
 ```
 
-A API estará disponível em `http://localhost:8080`.
+#### Backend
 
-## Endpoints Principais
-
-### Criar um Novo Contato
-**POST** `/contatos`
-```json
-{
-  "nome": "João Silva",
-  "telefone": "(11) 99999-8888",
-  "email": "joao@email.com"
-}
+```sh
+cd agenda-telefonica-back
+./mvnw clean install
 ```
 
-### Listar Todos os Contatos
-**GET** `/contatos`
+### 3. Rodar o Projeto
 
-### Deletar um Contato pelo Nome
-**DELETE** `/contatos/{nome}`
+#### Frontend
+
+```sh
+npm run dev
+```
+
+Acesse em `http://localhost:5173`.
+
+#### Backend
+
+```sh
+./mvnw spring-boot:run
+```
+
+API disponível em `http://localhost:8080`.
+
+## Estrutura do Projeto
+
+```
+/agenda-telefonica-front
+  |-- src/
+  |-- public/
+  |-- Dockerfile.dev
+  |-- package.json
+/agenda-telefonica-back
+  |-- src/
+  |-- pom.xml
+  |-- Dockerfile.dev
+/docker-compose.dev.yml
+```
+
+## Executando o Projeto no Docker
+
+### Pré-requisitos
+
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Criar e iniciar os containers
+
+```sh
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+Isso iniciará os serviços do frontend, backend e banco de dados.
+
+### Acessar a aplicação
+
+- **Frontend:** [http://localhost:5173](http://localhost:5173)
+- **Backend:** [http://localhost:8080](http://localhost:8080)
+- **Banco de Dados:** `localhost:5432` (credenciais no `docker-compose.dev.yml`)
+
+## Comandos Úteis
+
+### Verificar containers rodando
+
+```sh
+docker ps
+```
+
+### Reiniciar serviços específicos
+
+- **Frontend:** `docker restart agenda-telefonica-api-frontend-1`
+- **Backend:** `docker restart agenda-telefonica-api-backend-1`
+
+### Parar os containers
+
+```sh
+docker-compose -f docker-compose.dev.yml down
+```
+
+### Reconstruir tudo e subir novamente
+
+```sh
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+### Remover imagens não utilizadas
+
+```sh
+docker system prune -a
+```
